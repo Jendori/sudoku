@@ -34,7 +34,7 @@ Table::Table(int x, int y, int sx, int sy) : Widget(x,y,sx,sy)
     valasztott.x=10;
     valasztott.y=10;
     hibas=false;
-
+    complete=false;
 }
 
 void Table::draw()
@@ -57,6 +57,9 @@ void Table::draw()
             boardkoord[i][j][1].y = (_y+1+(j)*_size_y/9) + (_size_y/9-2);
         }
     }
+    gout<<move_to(_x,400)<<color(0,0,0)<<text("Ha meg akarod valtoztatni egy mezo erteket, akkor");
+    gout<<move_to(_x,415)<<color(0,0,0)<<text("kattints ra es a billentyuzeten nyomd meg az adott szamot!");
+    gout<<move_to(_x,430)<<color(0,0,0)<<text("Ha uresse akarod tenni a mezot, nyomd meg a 0-t");
 }
 
 void Table::handle(genv::event ev)
@@ -92,7 +95,6 @@ void Table::handle(genv::event ev)
     int hibadb1=0;
     for(int k=0; k<9; ++k)
     {
-        hibadb1=0;
         for(int i=0; i<9; ++i)
         {
             for(int j=i+1; j<9; ++j)
@@ -100,16 +102,15 @@ void Table::handle(genv::event ev)
                 if(board[k][i]==board[k][j] && board[k][i]!=0)
                 {
                     hibadb1++;
+                    hibas=true;
                 }
             }
         }
-        if(hibadb1!=0){hibas=true;}
     }
-
-    int hibadb2;
+    int db=0;
+    int hibadb2=0;
     for(int k=0; k<9; ++k)
     {
-        hibadb2=0;
         for(int i=0; i<9; ++i)
         {
             for(int j=i+1; j<9; ++j)
@@ -117,16 +118,22 @@ void Table::handle(genv::event ev)
                 if(board[i][k]==board[j][k] && board[i][k]!=0)
                 {
                     hibadb2++;
+                    hibas=true;
                 }
             }
+            if(board[k][i]==0){db++;}
         }
-        if(hibadb2!=0){hibas=true;}
     }
-
-    if (hibadb1==0 || hibadb2==0){hibas=false;}
-
-    if(hibas)
+    if (db==0 && !hibas){complete=true;}
+    if (hibadb1==0 && hibadb2==0){hibas=false;}
+    if (hibas)
     {
-        gout<<move_to(_x,400)<<color(0,0,0)<<text("Hibás");
+        gout<<move_to(_x,350)<<color(0,0,0)<<text("Hibás");
     }
+    if (complete)
+    {
+        gout<<move_to(_x, 365)<<color(0,0,0)<<text("Kesz van");
+    }
+    hibadb1=0;
+    hibadb2=0;
 }

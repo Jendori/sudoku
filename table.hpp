@@ -22,6 +22,7 @@ protected:
     koord boardkoord[9][9][2];
     koord valasztott;
     bool hibas;
+    bool complete;
 public:
     Table(int x, int y, int sx, int sy);
     ~Table();
